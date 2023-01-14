@@ -15,7 +15,7 @@
 
 # Mono auto generated files
 mono_crash.*
-appsetings.local.json
+appsettings.local.json
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
