@@ -1,4 +1,5 @@
 
+using netstrava.Pages;
 using System.Text.Json.Serialization;
 
 namespace netstrava.Models;
@@ -26,7 +27,9 @@ public class Athlete
     [JsonPropertyName("state")]
     public string? State {get;set;}
 
-    [JsonPropertyName("friend_count")]
-    public int Followers {get;set;}
+    [JsonPropertyName("bio")]
+    public string? Bio {get;set;}
+
+    public IEnumerable<StravaActivity> Activities { get;set;} = new List<StravaActivity>();
 
 }

@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using netstrava.Models;
+using Newtonsoft.Json;
 
 namespace netstrava.Pages;
 
@@ -28,13 +29,34 @@ public class AppModel : PageModel
 
             var response = await client.GetAsync("https://www.strava.com/api/v3/athlete");
             App = await response.Content.ReadFromJsonAsync<Athlete>();
-            _logger.LogInformation(App?.FirstName);
-            if(response.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                Console.WriteLine("All is well so far");
-            }
+            _logger.LogInformation("Recieved data for {0}", App?.FirstName);
+
+            response = await client.GetAsync("https://www.strava.com/api/v3/athlete/activities");
+            string strActs = await response.Content.ReadAsStringAsync();
+            //var obj = JsonConvert.DeserializeObject(strActs, typeof(IEnumerable<StravaActivity>));
+            var acts = await response.Content.ReadFromJsonAsync<IEnumerable<StravaActivity>>();
+            if(acts is not null)
+                App.Activities = acts;
         }
 
         return Page();
     }
+}
+
+public class StravaActivity
+{
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    [JsonPropertyName("distance")]
+    public double? Distance { get; set; }
+
+    [JsonPropertyName("average_heartrate")]
+    public decimal? AverageHeartRate { get; set; }
+
+    [JsonPropertyName("average_watts")]
+    public decimal? AverageWatts { get; set; }
+
+    [JsonPropertyName("has_heartrate")]
+    public bool HasHeartRate { get; set; } = false;
 }

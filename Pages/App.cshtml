@@ -1,5 +1,8 @@
 @page
 @model AppModel
+@{
+    ViewData["Title"] = "The App";
+}
 
 This is a test
 <h1>Application!</h1>
@@ -7,5 +10,20 @@ This is a test
 @Model.App.FirstName<br />
 @Model.App.LastName<br />
 @Model.App.State<br />
-@Model.App.Followers<br />
+@Model.App.Bio<br />
+<hr /><br />
+@foreach(var m in Model.App.Activities)
+{
+    <div>
+        @{
+            var fixedDistance = m.Distance / 1609.344;
+        }
+
+        <h2>@m.Name</h2>
+        distance: @string.Format("{0:0.00}", fixedDistance)<br />
+        avg. heart rate: @m.AverageHeartRate<br />
+        avg. watts: @m.AverageWatts<br />
+        <hr /><br />
+    </div>
+}
 
